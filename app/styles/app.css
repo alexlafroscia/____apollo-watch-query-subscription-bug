@@ -1,0 +1,12 @@
+#panel {
+  background: lightgrey;
+  padding: 2em;
+}
+
+#columns {
+  display: flex;
+}
+
+.column {
+  flex-grow: 1;
+}
