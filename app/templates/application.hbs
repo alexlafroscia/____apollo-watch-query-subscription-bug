@@ -24,7 +24,9 @@
     <h1>Posts from <code>watchQuery</code></h1>
 
     {{#each model as |post|}}
-      <h2>{{post.id}}</h2>
+      <h2 style={{html-safe (concat "background-color: #" (color-from-value post.id))}}>
+        {{post.id}}
+      </h2>
       
       {{post.content}}
     {{/each}}
@@ -33,7 +35,9 @@
     <h1>Posts created locally</h1>
 
     {{#each createdPosts as |post|}}
-      <h2>{{post.id}}</h2>
+      <h2 style={{html-safe (concat "background-color: #" (color-from-value post.id))}}>
+        {{post.id}}
+      </h2>
       
       {{post.content}}
     {{/each}}
