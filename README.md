@@ -1,58 +1,37 @@
 # test-apollo-bug
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+`watchQuery` does not always fire when using `cache.writeQuery` to update the state of a `watchQuery`.
 
-## Prerequisites
+I was able to create a reproduction where the observable does not fire consistently. From my experience, it usually goes something like:
 
-You will need the following things properly installed on your computer.
+1. Perform a `writeQuery` where nothing happens
+2. Perform a `writeQuery` where nothing happens
+3. Perform a `writeQuery` that emits the original state, plus the first two objects pushed into the store, but not the one that was _just_ created
 
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/)
-* [Yarn](https://yarnpkg.com/)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+## Reproducing the bug
 
-## Installation
+Run the following to install the application locally
 
-* `git clone <repository-url>` this repository
-* `cd test-apollo-bug`
-* `yarn install`
+```bash
+yarn install
+yarn start
+```
 
-## Running / Development
+You'll be presented with a page that presents
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+- A list of posts from `watchQuery`
+- A list of posts created locally (the list is added to, manually, from each new post)
+- A button to create a post
 
-### Code Generators
+Creating a post does the following:
 
-Make use of the many generators for code, try `ember help generate` for more details
+- Runs a mutation
+- Performs `readQuery` to get the state of the `watchQuery` performed earlier
+- Updates the state of the cached data
+- Performs `writeQuery` to update the state of the `watchQuery`
 
-### Running Tests
+## The setup under-the-hood
 
-* `ember test`
-* `ember test --server`
-
-### Linting
-
-* `yarn lint:hbs`
-* `yarn lint:js`
-* `yarn lint:js --fix`
-
-### Building
-
-* `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+- We use `ember-apollo-client` to provide the Apollo experience in our application. However, we bipass the library when using `watchQuery`, `readQuery` and `writeQuery` and instead do directly to the underlying Apollo client instance
+- Pretender intercepts the requests locally
+- `graphql-tools` allows us to mock a valid response to the requests
