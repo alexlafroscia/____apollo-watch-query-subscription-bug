@@ -1,5 +1,28 @@
-{{!-- The following component displays Ember's default welcome message. --}}
-{{welcome-page}}
-{{!-- Feel free to remove this! --}}
+<div id="panel">
+  <button {{action (perform createPost)}}>
+    Create New Post
+  </button>
 
-{{outlet}}
+  Created {{createPost.performCount}} additional posts
+</div>
+
+<div id="columns">
+  <div class="column">
+    <h1>Posts from <code>watchQuery</code></h1>
+
+    {{#each model as |post|}}
+      <h2>{{post.id}}</h2>
+      
+      {{post.content}}
+    {{/each}}
+  </div>
+  <div class="column">
+    <h1>Posts created locally</h1>
+
+    {{#each createdPosts as |post|}}
+      <h2>{{post.id}}</h2>
+      
+      {{post.content}}
+    {{/each}}
+  </div>
+</div>
