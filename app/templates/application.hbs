@@ -4,6 +4,19 @@
   </button>
 
   Created {{createPost.performCount}} additional posts
+
+  <hr>
+
+  <label>
+    <input
+      type="checkbox"
+      oninput={{action
+        (mut performAdditionalBroadcast (not performAdditionalBroadcast))
+      }}
+      value={{performAdditionalBroadcast}}
+    >
+    Call <code>queryManager.broadCastQueries()</code> an additional time?
+  </label>
 </div>
 
 <div id="columns">

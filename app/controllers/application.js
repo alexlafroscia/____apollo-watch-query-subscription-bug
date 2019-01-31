@@ -43,6 +43,7 @@ export default class ApplicationController extends Controller {
   model = [];
 
   createdPosts = [];
+  performAdditionalBroadcast = false;
 
   @task
   fetchModel = function*() {
@@ -84,5 +85,9 @@ export default class ApplicationController extends Controller {
       query: allPosts,
       data
     });
+
+    if (this.performAdditionalBroadcast) {
+      this.apollo.client.initQueryManager().broadcastQueries();
+    }
   };
 }

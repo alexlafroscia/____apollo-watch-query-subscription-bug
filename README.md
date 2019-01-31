@@ -31,6 +31,12 @@ Creating a post does the following:
 - Updates the state of the cached data
 - Performs `writeQuery` to update the state of the `watchQuery`
 
+## A work-around
+
+Calling `queryManager.broadcastQueries()` manually an additional time solves the problem (likely because whatever is going on under the hood that creates this off-by-one behavior is offset by broadcasting the new state an additional time).
+
+This can be simulated in the demonstration by checking the the checkbox below the `Create New Post` button.
+
 ## The setup under-the-hood
 
 - We use `ember-apollo-client` to provide the Apollo experience in our application. However, we bipass the library when using `watchQuery`, `readQuery` and `writeQuery` and instead do directly to the underlying Apollo client instance
