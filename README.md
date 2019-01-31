@@ -9,6 +9,16 @@ I was able to create a reproduction where the observable does not fire consisten
 
 Essentially, we lose the first event.
 
+## Show me the code!
+
+This is an Ember.js application, because that's what my real application that has this bug is. The relevant code has nothing to do with Ember, it's just the easiest way for me to build a full-blown application that also showcases the problem.
+
+All of the relevant code to reproduce the bug can be found in `app/controller/application.js`. There are only two functions in that file that are necessary to understand: `fetchModel` and `createPost`.
+
+`fetchModel` uses the Apollo Client to perform a `watchQuery`. That observable will be monitored and the last event from it rendered into the page. That code can be found [here](https://github.com/alexlafroscia/____apollo-watch-query-subscription-bug/blob/master/app/controllers/application.js#L49-L62).
+
+`createPost` creates a new object through a Mutation, reads the cache from the query that was performed in `fetchModel`, merges the new post in with the existing ones, and writes it back to the cache using `writeQuery`. This often does not update the `watchQuery` the way that I would expect. That code can be found [here](https://github.com/alexlafroscia/____apollo-watch-query-subscription-bug/blob/master/app/controllers/application.js#L66-L87)
+
 ## Reproducing the bug
 
 Run the following to install the application locally
