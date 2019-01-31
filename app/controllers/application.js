@@ -1,9 +1,11 @@
+/* eslint-disable require-yield */
+
 import Controller from "@ember/controller";
 import { inject as service } from "@ember-decorators/service";
 import { task, lastValue } from "ember-concurrency-decorators";
-import { Subject, empty, concat, of } from "rxjs";
+import { Subject, empty } from "rxjs";
 import { map } from "rxjs/operators";
-import { subscribe, firstToPromise } from "ember-rx";
+import { subscribe } from "ember-rx";
 import gql from "graphql-tag";
 
 function toRxSubject(observable) {
@@ -55,11 +57,7 @@ export default class ApplicationController extends Controller {
       console.log(value); // eslint-disable-line
     });
 
-    const [promise, rest] = firstToPromise(subject);
-
-    const result = yield promise;
-
-    return concat(of(result), rest).pipe(map(value => value.data.allPosts));
+    return subject.asObservable().pipe(map(value => value.data.allPosts));
   };
 
   @task

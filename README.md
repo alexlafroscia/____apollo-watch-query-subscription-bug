@@ -4,9 +4,10 @@
 
 I was able to create a reproduction where the observable does not fire consistently. From my experience, it usually goes something like:
 
-1. Perform a `writeQuery` where nothing happens
-2. Perform a `writeQuery` where nothing happens
-3. Perform a `writeQuery` that emits the original state, plus the first two objects pushed into the store, but not the one that was _just_ created
+1. Perform a `writeQuery` where the `watchQuery` does not update
+2. Perform a `writeQuery` where the state from before the `writeQuery` is emitted from the `watchQuery`
+
+Essentially, we lose the first event.
 
 ## Reproducing the bug
 
